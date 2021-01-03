@@ -30,6 +30,7 @@ public class dates extends AppCompatActivity {
     private RelativeLayout relativeLayout;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -37,21 +38,26 @@ public class dates extends AppCompatActivity {
         setContentView(R.layout.activity_dates);
 
         datesRecView = findViewById(R.id.datesRecView);
-
         ArrayList<dates_data> database = new ArrayList<>();
-
-        database.add(new dates_data("18:30", "Jan|18|2020", "Make meth" ));
-
+        try {
+            database = load_data();
+        }catch(Exception error){
+            error.printStackTrace();
+        }
         datesRecViewAdapter adapter = new datesRecViewAdapter();
+
         adapter.setData(database);
 
         datesRecView.setAdapter(adapter);
         datesRecView.setLayoutManager(new LinearLayoutManager(this));
-    }
 
-    //TODO finish loading and saving system
+
+    }
+    //Todo add a button and implement an listener to add task to that date.
+    //Todo remove a item on the schedule
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ArrayList<dates_data> load_data(){
+    public ArrayList<dates_data> load_data() {
         //Write JSON file
         JSONParser jsonParser = new JSONParser();
         ArrayList<dates_data> result = new ArrayList<>();
@@ -65,17 +71,23 @@ public class dates extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try (FileReader reader = new FileReader("output.json"))
-        {
+        try (FileReader reader = new FileReader("output.json")) {
             //Read JSON file
             Object obj = jsonParser.parse(reader);
 
             JSONArray List = (JSONArray) obj;
 
-
-
             //Iterate over JSON array
-            list.forEach( data -> parseObject( (JSONObject) data) );
+            for (JSONObject object : (Iterable<JSONObject>) List) {
+                JSONObject temp = (JSONObject) object.get("Item");
+                String a = (String) temp.get("Time");
+                String b = (String) temp.get("Date");
+                String c = (String) temp.get("Task");
+                result.add(new dates_data(a, b, c));
+            }
+
+
+            //list.forEach( data -> parseObject( (JSONObject) data) );
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -85,16 +97,15 @@ public class dates extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
-        //TODO finish load data function
+        return result;
     }
-    public void save_data(ArrayList<dates_data> data){  // This function saves items by writing them into the data file
+
+    public void save_data(ArrayList<dates_data> data) {  // This function saves items by writing them into the data file
         JSONObject Details = new JSONObject();
         JSONObject Object = new JSONObject();
         JSONArray list = new JSONArray();
 
-        for(dates_data i :data){
+        for (dates_data i : data) {
             Details.put("Time", i.getTime());
             Details.put("Date", i.getDate());
             Details.put("Task", i.getTask());
@@ -104,37 +115,12 @@ public class dates extends AppCompatActivity {
         }
 
         try (FileWriter file = new FileWriter("saves.json")) {
-            file.write(list.toJSONString() );
+            file.write(list.toJSONString());
             file.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
 
-        }
+        } //TODO
     }
-
-    private static void parseObject(JSONObject obj)
-    {
-
-        JSONObject Object = (JSONObject) obj.get("Item");
-
-
-        String time = (String) obj.get("Time");
-        System.out.println(time);
-
-        String date = (String) obj.get("Date");
-        System.out.println(date);
-
-        String task = (String) obj.get("Task");
-        System.out.println(task);
-
-        /*     private String time;
-                private String date;
-                private String task;
-
-         */
-    }
-
-
-
 }

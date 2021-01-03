@@ -22,6 +22,8 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//todo logo for the app
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
                 String DayOftheWeek = new String();
+
                 switch (calendar.get(Calendar.DAY_OF_WEEK)) {
                     case 1: DayOftheWeek ="Sunday"; break;
                     case 2: DayOftheWeek ="Monday"; break;
@@ -68,8 +69,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //Todo make a button that allows for scheduling for every specific time and week days of the day.
+        //Todo make notification when that day and time for the task is reached.
+        //Todo make a button that remove the task
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,4 +101,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, dates.class);
         startActivity(intent);
     }
+
+
 }
