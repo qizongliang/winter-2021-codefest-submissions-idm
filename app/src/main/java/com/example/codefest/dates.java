@@ -33,7 +33,7 @@ public class dates extends AppCompatActivity {
     //public static final String KEY_ITEM_TEXT = "item_text";
     //public static final String KEY_ITEM_POSITION ="item_position";
     //public static final int EDIT_TEXT_CODE = 20;
-
+    datesRecViewAdapter adapter;
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,56 +42,40 @@ public class dates extends AppCompatActivity {
         Button add_item = findViewById(R.id.additem);
         RecyclerView datesRecView = findViewById(R.id.datesRecView);
 
-        dates_data[] database = new dates_data[]{
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android),
-                new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android)
-        };
 
-        datesRecView.setHasFixedSize(true);
-        datesRecView.setLayoutManager(new LinearLayoutManager(this));
-        datesRecViewAdapter adapter = new datesRecViewAdapter(database,dates.this);
-        datesRecView.setAdapter(adapter);
+        ArrayList <dates_data>database = new ArrayList<dates_data>(){}; // Todo load the correct task for each day or weekdays so if I have a schedule on friday. and I clicekd into a friday then the task will appear
+        
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
 
 
         //database = load_data();
 
-        /*
-        datesRecViewAdapter.OnLongClickListener onLongClickListener = new datesRecViewAdapter.OnLongClickListener(){
+
+        datesRecView.setHasFixedSize(true);
+        datesRecView.setLayoutManager(new LinearLayoutManager(this));
+        adapter= new datesRecViewAdapter(database,dates.this);
+        datesRecView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new datesRecViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemLongClicked(int position){
-                Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show(); // THis does work but it doesn't delete the item but instead it crashes the app.
-                // Delete the item from the model
-                //database.remove(position);
-                // Notify the adapter
-                //itemsAdapter.notifyItemRemoved(position);
-                //Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
-                //save_data(database);
+            public void onItemClick(int position) {
+                Toast.makeText(getApplicationContext(),"clicked!",Toast.LENGTH_SHORT).show(); // This works
             }
-        };
-
-
-        datesRecViewAdapter.OnClickListener onClickListener = new datesRecViewAdapter.OnClickListener() {
+        });
+        adapter.setOnItemLongClickListener(new datesRecViewAdapter.OnLongClickListener() {
             @Override
-            public void onItemClicked(int position) {
-                Toast.makeText(getApplicationContext(), Integer.toString(position), Toast.LENGTH_SHORT).show();
+            public void onItemLongClicked(int position) {
+                Toast.makeText(getApplicationContext(),"Removed",Toast.LENGTH_SHORT).show(); // THis should work
+                database.remove(position);
+                adapter.notifyItemRemoved(position);
 
-                //create the new activity
-                //Intent i = new Intent(dates.this, dates_data.class);
-                //pass the data being edited
-                //i.putExtra(KEY_ITEM_TEXT, database.get(position));
-                //i.putExtra(KEY_ITEM_POSITION, position);
-                //display the activity
-                //startActivityForResult(i,EDIT_TEXT_CODE);
             }
-        };
+        });
 
-         */
 
         /*itemsAdapter = new datesRecViewAdapter(database,onLongClickListener, onClickListener );
         datesRecView.setAdapter(itemsAdapter);
