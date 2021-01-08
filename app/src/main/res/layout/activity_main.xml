@@ -21,15 +21,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="wrap_content"
@@ -40,5 +31,15 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="59dp"
         android:layout_marginEnd="30dp" />
+
+    <Button
+        android:id="@+id/AddSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="12dp"
+        android:text="Add New Schedule" />
 
 </RelativeLayout>

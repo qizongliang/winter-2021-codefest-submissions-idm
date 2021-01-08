@@ -6,11 +6,17 @@ public class dates_data {
     private String time;
     private String date;
     private String task;
+    private boolean schedule;
+    private boolean  item;
+    private Integer image;
 
-    public dates_data(String time, String date, String task) {
+    public dates_data(String time, String date, String task,boolean schedule, boolean item, Integer image) {
         this.time = time;
         this.date = date;
         this.task = task;
+        this.schedule = schedule;
+        this.item = item;
+        this.image=image;
     }
 
     public String getTime() { return time; }
@@ -31,9 +37,19 @@ public class dates_data {
         return task;
     }
 
-    public void setTask(String task) {
-        this.task = task;
-    }
+    public void setTask(String task) { this.task = task; }
+
+    public boolean isSchedule() { return schedule; }
+
+    public void setSchedule(boolean schedule) { this.schedule = schedule; }
+
+    public boolean isItem() { return item; }
+
+    public void setItem(boolean item) { this.item = item; }
+
+    public Integer getImage() { return image;}
+
+    public void setImage(Integer image) { this.image = image; }
 
     public String getTime_hour() {
         String temp = this.getTime();
@@ -56,15 +72,14 @@ public class dates_data {
     }
 
 
-
-
-
     @Override
     public String toString() {
         return "dates_data{" +
-                "time=" + time +
-                ", date=" + date +
+                "time='" + time + '\'' +
+                ", date='" + date + '\'' +
                 ", task='" + task + '\'' +
+                ", schedule=" + schedule +
+                ", item=" + item +
                 '}';
     }
 }

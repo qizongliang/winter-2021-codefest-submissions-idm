@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button add_schedule = findViewById(R.id.AddSchedule);
+
+        add_schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -66,12 +69,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(getApplicationContext(), ""+year +" "+ month +" "+ dayOfMonth, Toast.LENGTH_SHORT).show();
+
             }
         });
 
         //Todo make a button that allows for scheduling for every specific time and week days of the day.
         //Todo make notification when that day and time for the task is reached.
         //Todo make a button that remove the task
+
     }
 
 
