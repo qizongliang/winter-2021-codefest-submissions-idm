@@ -1,32 +1,45 @@
 package com.example.codefest;
 
-import androidx.annotation.Nullable;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.*;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.lang.reflect.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class dates extends AppCompatActivity {
     @SuppressWarnings("unchecked")
@@ -34,31 +47,37 @@ public class dates extends AppCompatActivity {
     //public static final String KEY_ITEM_POSITION ="item_position";
     //public static final int EDIT_TEXT_CODE = 20;
     datesRecViewAdapter adapter;
+    ArrayList <dates_data>database = new ArrayList<>();
+    ArrayList <dates_data> databaseclone =new ArrayList<>();
+    int current_year;
+    int current_day;
+    String current_month;
+    int current_weekday;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dates);
-        Button add_item = findViewById(R.id.additem);
         RecyclerView datesRecView = findViewById(R.id.datesRecView);
+        load_data();
 
+        databaseclone = (ArrayList<dates_data>) database.clone();
 
-        ArrayList <dates_data>database = new ArrayList<dates_data>(){}; // Todo load the correct task for each day or weekdays so if I have a schedule on friday. and I clicekd into a friday then the task will appear
-        
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
-        database.add(new dates_data("18:20","Jan|10|2010","Make Meth",false,true,R.drawable.ic_android));
+        Bundle extras = getIntent().getExtras();
+        current_year = extras.getInt("Current year");
+        current_day = extras.getInt("Current day");
+        current_month = extras.getString("Current month"); // Change the month to word
+        current_weekday = extras.getInt("Current weekday");
 
-
-        //database = load_data();
-
+        Toast.makeText(getApplicationContext(),(String)(current_year+"|"+current_month+"|"+current_day+" - "+ current_weekday),Toast.LENGTH_SHORT).show();
+        sort();
 
         datesRecView.setHasFixedSize(true);
         datesRecView.setLayoutManager(new LinearLayoutManager(this));
-        adapter= new datesRecViewAdapter(database,dates.this);
+
+
+        adapter= new datesRecViewAdapter(databaseclone,dates.this);
         datesRecView.setAdapter(adapter);
         adapter.setOnItemClickListener(new datesRecViewAdapter.OnItemClickListener() {
             @Override
@@ -69,141 +88,69 @@ public class dates extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new datesRecViewAdapter.OnLongClickListener() {
             @Override
             public void onItemLongClicked(int position) {
-                Toast.makeText(getApplicationContext(),"Removed",Toast.LENGTH_SHORT).show(); // THis should work
-                database.remove(position);
+
+                Iterator<dates_data> itr = database.iterator();
+                while (itr.hasNext()) {
+                    dates_data temp  = itr.next();
+                    if(databaseclone.get(position).getId().equals(temp.getId())){
+                        itr.remove();
+                    } //Generate unique Id's
+                }
+
+                databaseclone.remove(position);
+                //remove the item with that id save then reload everything
                 adapter.notifyItemRemoved(position);
-
+                save_data();
+                //load_data();
+                //sort();
+                //Todo stop the duplication glitch
             }
         });
 
-
-        /*itemsAdapter = new datesRecViewAdapter(database,onLongClickListener, onClickListener );
-        datesRecView.setAdapter(itemsAdapter);
-        datesRecView.setLayoutManager(new LinearLayoutManager(this));
-
-        add_item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+    }
+    public void sort(){// implement better sort
+        Iterator<dates_data> itr = databaseclone.iterator();
+        while (itr.hasNext()) {
+            dates_data temp  = itr.next();
+            if (current_weekday != temp.getSchedule()){
+                itr.remove();
+            }else if(!temp.getDate().equals((String)(current_month+"|"+current_day+"|"+current_year))){
+                itr.remove();
             }
-        });
-
-        try {
-            database = load_data();
-        }catch(Exception error){
-            error.printStackTrace();
         }
 
-         */
+        for(int i = 0; i <databaseclone.size()-1;i++){ //could be out of range? bubble sort
+            for(int j = 0; j < databaseclone.size()-i-1; j++){
+                if(((Integer.parseInt(databaseclone.get(j).getTime_hour()) * 60 )+(Integer.parseInt(databaseclone.get(j).getTime_minute()))) > ((Integer.parseInt(databaseclone.get(j+1).getTime_hour()) * 60 )+(Integer.parseInt(databaseclone.get(j+1).getTime_minute())))){
+                    Collections.swap(databaseclone,j ,j+1);
+                }
+            }
+        }
+        //return tracking with the tracking index
     }
     //Todo add a button and implement an listener to add task to that date.
     //Todo remove a item on the schedule
 
-    //@RequiresApi(api = Build.VERSION_CODES.N)
-
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK && requestCode == EDIT_TEXT_CODE) {
-            //Retreive the updated text value
-            String itemText = data.getStringExtra(KEY_ITEM_TEXT);
-            //Extract the original position of the editred item from the position key
-            int position = data.getExtras().getInt(KEY_ITEM_POSITION);
-
-            //update the model at the right position
-            data.set(position,itemText );
-            itemsAdapter.notifyItemChanged(position);
-            saveItems();
-            Toast.makeText(getApplicationContext()
-                    , "Item updated successfully "
-                    ,Toast.LENGTH_SHORT).show();
-        }else{
-            Log.w("MainActivity","Unknown call to onActivityResult");
+    public void load_data() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("dates_data", null);
+        Type type = new TypeToken<ArrayList<dates_data>>() {}.getType();
+        database = gson.fromJson(json, type);
+        if (database == null) {
+            database = new ArrayList<>();
         }
     }
 
-     */
-
-/*
-    public ArrayList<dates_data> load_data() {
-        //Write JSON file
-        JSONParser jsonParser = new JSONParser();
-        ArrayList<dates_data> result = new ArrayList<>();
-
-
-        JSONArray list = new JSONArray();
-        try (FileWriter file = new FileWriter("output.json")) {
-            file.write(list.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try (FileReader reader = new FileReader("output.json")) {
-            //Read JSON file
-            Object obj = jsonParser.parse(reader);
-
-            JSONArray List = (JSONArray) obj;
-
-            //Iterate over JSON array
-            for (JSONObject object : (Iterable<JSONObject>) List) {
-                JSONObject temp = (JSONObject) object.get("Data");
-                String a = (String) temp.get("Time");
-                String b = (String) temp.get("Date");
-                String c = (String) temp.get("Task");
-                Boolean d = Boolean.parseBoolean ((String) temp.get("Schedule"));
-                Boolean e = Boolean.parseBoolean ((String) temp.get("Item"));
-
-                result.add(new dates_data(a, b, c,d,e));
-            }
-
-
-            //list.forEach( data -> parseObject( (JSONObject) data) );
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+    public void save_data() {  // This function saves items by writing them into the data file
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(database);
+        editor.putString("dates_data", json);
+        editor.apply();
     }
 
-    public void save_data(ArrayList<dates_data> data) {  // This function saves items by writing them into the data file
-        JSONObject Details = new JSONObject();
-        JSONObject Object = new JSONObject();
-        JSONArray list = new JSONArray();
 
 
-        try{
-            for (dates_data i : data) {
-                Details.put("Time", i.getTime());
-                Details.put("Date", i.getDate());
-                Details.put("Task", i.getTask());
-                Details.put("Schedule",i.isSchedule());
-                Details.put("Item", i.isItem());
-
-                Object.put("Data", Details);
-
-                list.add(Object);
-            }
-        }catch (Exception error){
-            error.printStackTrace();
-        }
-
-
-        try (FileWriter file = new FileWriter("saves.json")) {
-            file.write(list.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } //TODO
-    }
-
- */
 }

@@ -59,42 +59,14 @@ public class datesRecViewAdapter extends RecyclerView.Adapter<datesRecViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) { //set the text for the recycler view
         dates_data temp = database.get(position);
         holder.title.setText(temp.getTask());
-        holder.description.setText("Date: "+ temp.getDate() +" Time"+ temp.getTime());
+        holder.description.setText("Date: "+ temp.getDate() +" Time: "+ temp.getTime());
         holder.icon.setImageResource(temp.getImage());
-
-        /*
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"clicked!",Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(context,"clicked!",Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-         */
-
-
-        //String item = database[position].getTask();
-        //holder.time.setText(data.get(position).getTask());
-        //holder.bind(item);
     }
     @Override
     public int getItemCount() {
         return database.size();
     }
-    /*
-    public void setData(ArrayList<dates_data> data) {
-        this.data = data;
-        notifyDataSetChanged();
-    }
 
-     */
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView icon;
         TextView title;

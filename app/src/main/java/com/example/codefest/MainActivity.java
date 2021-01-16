@@ -1,11 +1,14 @@
 package com.example.codefest;
 
+import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,10 +27,19 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+
 //todo logo for the app
 
 
 public class MainActivity extends AppCompatActivity {
+    ArrayList<dates_data> database = new ArrayList<>();
+    int currentyear;
+    int currentmonth;
+    int currentday;
+    int currentweekday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +49,12 @@ public class MainActivity extends AppCompatActivity {
         CalendarView cal =(CalendarView) findViewById(R.id.calendarView);
 
         setSupportActionBar(toolbar);
-
+        load_data();
         Button add_schedule = findViewById(R.id.AddSchedule);
 
         add_schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
@@ -52,23 +62,14 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                opendates();
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
-                String DayOftheWeek = new String();
-
-                switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-                    case 1: DayOftheWeek ="Sunday"; break;
-                    case 2: DayOftheWeek ="Monday"; break;
-                    case 3: DayOftheWeek ="Tuesday"; break;
-                    case 4: DayOftheWeek ="Wednesday"; break;
-                    case 5: DayOftheWeek ="Thursday"; break;
-                    case 6: DayOftheWeek ="Friday"; break;
-                    case 7: DayOftheWeek ="Saturday"; break;
-                    default: DayOftheWeek ="Unknown"; break;
-                }
-
-                Toast.makeText(getApplicationContext(), ""+year +" "+ month +" "+ dayOfMonth, Toast.LENGTH_SHORT).show();
+                currentyear = year;
+                currentmonth = month +1;
+                currentday = dayOfMonth;
+                currentweekday = calendar.get(Calendar.DAY_OF_WEEK);
+                opendates();
+                //Toast.makeText(getApplicationContext(), ""+year +" "+ (month+1) +" "+ dayOfMonth, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -102,10 +103,57 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void opendates(){
-        Intent intent = new Intent(this, dates.class);
+    public void openedit(){
+        Intent intent = new Intent(this, Edit_Activity.class);
         startActivity(intent);
     }
+
+    public void opendates(){
+        Intent intent = new Intent(this, dates.class);
+        String month = new String();
+        switch(currentmonth){
+            case 1: month = "Jan"; break;
+            case 2: month = "Feb"; break;
+            case 3: month = "Mar"; break;
+            case 4: month = "Apr"; break;
+            case 5: month = "May"; break;
+            case 6: month = "Jun"; break;
+            case 7: month = "Jul"; break;
+            case 8: month = "Aug"; break;
+            case 9: month = "Sep"; break;
+            case 10: month = "Oct"; break;
+            case 11: month = "Nov"; break;
+            case 12: month = "Dec"; break;
+            default: month = "";break;
+        }
+
+        intent.putExtra("Current year", currentyear);
+        intent.putExtra("Current month", month);
+        intent.putExtra("Current day", currentday);
+        intent.putExtra("Current weekday", currentweekday);
+        startActivity(intent);
+    }
+
+    public void load_data() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("dates_data", null);
+        Type type = new TypeToken<ArrayList<dates_data>>() {}.getType();
+        database = gson.fromJson(json, type);
+        if (database == null) {
+            database = new ArrayList<>();
+        }
+    }
+
+    public void save_data() {  // This function saves items by writing them into the data file
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(database);
+        editor.putString("dates_data", json);
+        editor.apply();
+    }
+
 
 
 }
