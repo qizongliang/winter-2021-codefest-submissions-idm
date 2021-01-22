@@ -7,30 +7,39 @@ import com.google.gson.annotations.SerializedName;
 
 import java.time.*;
 
-public class dates_data implements Parcelable {
-    private String time;
-    private String date;
+public class dates_data implements Parcelable{
+    //rework the class and fix the parsing issue.
+    private int time_hours;
+    private int time_minutes;
+    private String month;
+    private int year;
+    private int day;
+
     private String task;
     private int schedule;
     private boolean  item;
     private Integer image;
     private String id;
 
-
-    public dates_data(String time, String date, String task,int schedule, boolean item, Integer image, String id) {
-        this.time = time;
-        this.date = date;
+    public dates_data(int time_hours, int time_minutes, String month, int year, int day, String task, int schedule, boolean item, Integer image, String id) {
+        this.time_hours = time_hours;
+        this.time_minutes = time_minutes;
+        this.month = month;
+        this.year = year;
+        this.day = day;
         this.task = task;
         this.schedule = schedule;
         this.item = item;
-        this.image=image;
+        this.image = image;
         this.id = id;
     }
 
-
     protected dates_data(Parcel in) {
-        time = in.readString();
-        date = in.readString();
+        time_hours = in.readInt();
+        time_minutes = in.readInt();
+        month = in.readString();
+        year = in.readInt();
+        day = in.readInt();
         task = in.readString();
         schedule = in.readInt();
         item = in.readByte() != 0;
@@ -54,18 +63,36 @@ public class dates_data implements Parcelable {
         }
     };
 
-    public String getTime() { return time; }
-
-    public void setTime(String time) {
-        this.time = time;
+    public int getTime_hours() {
+        return time_hours;
     }
 
-    public String getDate() {
-        return date;
+    public void setTime_hours(int time_hours) {
+        this.time_hours = time_hours;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public int getTime_minutes() {
+        return time_minutes;
+    }
+
+    public void setTime_minutes(int time_minutes) {
+        this.time_minutes = time_minutes;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 
     public String getTask() {
@@ -86,29 +113,13 @@ public class dates_data implements Parcelable {
 
     public void setImage(Integer image) { this.image = image; }
 
-    public String getTime_hour() {
-        String temp = this.getTime();
-        return temp.substring(0,2);
-    }
+    public String getMonth() {return month;}
 
-    public String  getTime_minute(){
-        String temp = this.getTime();
-        return temp.substring(3);
-    }
+    public void setMonth(String month) {this.month = month;}
 
     public String getId() { return id; }
 
     public void setId(String id) { this.id = id; }
-
-    public String getDate_month(){
-        return this.getDate().substring(0,3);
-    }
-    public String getDate_year(){
-        return this.getDate().substring(6);
-    }
-    public String getDate_date(){
-        return this.getDate().substring(4,6);
-    }
 
     @Override
     public int describeContents() {
@@ -117,8 +128,11 @@ public class dates_data implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(time);
-        dest.writeString(date);
+        dest.writeInt(time_hours);
+        dest.writeInt(time_minutes);
+        dest.writeString(month);
+        dest.writeInt(year);
+        dest.writeInt(day);
         dest.writeString(task);
         dest.writeInt(schedule);
         dest.writeByte((byte) (item ? 1 : 0));

@@ -1,5 +1,6 @@
 package com.example.codefest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +39,6 @@ public class datesRecViewAdapter extends RecyclerView.Adapter<datesRecViewAdapte
     ArrayList<dates_data> database;
     Context context;
 
-
-
-
     public datesRecViewAdapter(ArrayList<dates_data> database, dates activity){
         this.database= database;
         this.context = activity;
@@ -55,11 +53,14 @@ public class datesRecViewAdapter extends RecyclerView.Adapter<datesRecViewAdapte
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) { //set the text for the recycler view
         dates_data temp = database.get(position);
+
+        String temptext = "Date: "+ temp.getMonth() +"/"+ temp.getDay()+ "/"+ temp.getYear() +" Time: "+ temp.getTime_hours() +":"+ temp.getTime_minutes();
         holder.title.setText(temp.getTask());
-        holder.description.setText("Date: "+ temp.getDate() +" Time: "+ temp.getTime());
+        holder.description.setText(temptext);
         holder.icon.setImageResource(temp.getImage());
     }
     @Override
