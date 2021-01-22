@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         add_schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //  dates_data(int time_hours, int time_minutes, String month, int year, int day, String task, int schedule, boolean item, Integer image, String id)
+                openedit();
             }
         });
 
@@ -73,11 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //Todo make a button that allows for scheduling for every specific time and week days of the day.
-        //Todo make notification when that day and time for the task is reached.
-        //Todo make a button that remove the task
-
     }
 
 
@@ -93,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -153,7 +150,5 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("dates_data", json);
         editor.apply();
     }
-
-
 
 }
