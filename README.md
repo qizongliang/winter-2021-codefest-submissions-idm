@@ -4,7 +4,7 @@
 
 Submitted by: **QIZONG LIANG**
 
-Time spent: **3** hours spent in total
+Time spent: **40** hours spent in total
 
 ## User Stories
 
