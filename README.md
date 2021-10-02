@@ -1,37 +1,54 @@
-# Hunter Codefest 2020-2021
+# Project 1 - *TodoAppAndroidPrework*
 
-# Team Info
-### Team name:  IDM
-### Team members (format: GitHub username, last name, first name): (qizongliang,Liang ,Qizong)&& (michaelxie1, xie, michael)
+**TodoAppAndroidPrework** is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
 
-### Group info (check all that apply - add an X in the [ ])
-- [ ] We are a Daedalus Google Mentorship group
-- [X] We are a beginner group (only completed CSCI 12700)
+Submitted by: **QIZONG LIANG**
 
-# General Info
-## Theme: Create a Passion Project - Make something you've always wanted to build!
-Think of something you've always wanted to make and bring to life, and do it! To make it easier for our judges and to have some form of organization, all we ask is to try to keep it within one of these categories:
--   Productivity
--   Social Good
--   Education
-    
-Please incorporate it into your project, and we hope to see new, exciting, and innovative projects!
+Time spent: **3** hours spent in total
 
-*__If you have any questions about an idea and whether it's within the scope, please ask us as soon as possible.__*
+## User Stories
 
-## Rules & Instructions:
+The following **required** functionality is completed:
 
-1. Please edit the **Team Info** section of this file with your team's information.
-2. All projects must be completed by groups of 2-6 people from Hunter College.
-3. Submissions will be evaluated starting on **Monday, January 25 at 7:00am**.
-4. Projects must be able to be run by the organizers by the submission deadline.
-5. Please edit the INSTALL.md markdown file with instructions on how to install and run your project. 
-6. Projects can be standalone programs, web applications, Android apps,  iOS apps, etc.
-7. **No hardware projects!** You may not use additional hardware other than what is on a typical laptop for a desktop / web application and a typical phone for a phone app.
-8. Good luck and have fun!
+* [x] User can **view a list of todo items**
+* [x] User can **successfully add and remove items** from the todo list
+* [x] User's **list of items persisted** upon modification and and retrieved properly on app restart
 
-## Important dates:
-- Start date: Monday, December 21st, 2020
-- Submission deadline: Monday, January 25th, 2021 at 7:00am
+The following **optional** features are implemented:
 
-If your team has any questions, problems, or concerns, please contact us at hunter.codefest@gmail.com.
+* [x] User can **tap a todo item in the list and bring up an edit screen for the todo item** and then have any changes to the text reflected in the todo list
+
+The following **additional** features are implemented:
+
+* [x] Schedule a item to be done every single weekdays
+* [x] Display time that event will take place
+* [x] Display calendar
+
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
+
+<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+## Notes
+
+The challenging part of building this app is that i've have to think creatively of how to make this app better. Since this is such a simple project that it became harder to improve since we can't think creatively on such a simple project
+
+## License
+
+    Copyright [2021] [Qi Zong Liang]
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
